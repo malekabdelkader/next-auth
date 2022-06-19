@@ -90,7 +90,7 @@ class AuthService {
   async register(user: User) {
     const data = {
       email: user.email,
-      first_name: user.firstName,
+      firstName: user.firstName,
       password: user.password,
     };
 

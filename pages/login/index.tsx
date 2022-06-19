@@ -1,67 +1,70 @@
 import React, { useEffect, useState } from "react";
-import type { NextPage} from "next";
-import styles from "./login.module.scss";
-import auth from '../../services/Authentification/Authentication';
-import { useRouter } from 'next/router'
-interface FormSubmit  {
+import type { NextPage } from "next";
+import auth from "../../services/Authentification/Authentication";
+import { useRouter } from "next/router";
+import Link from "next/link";
+import AuthLayout from "../../layouts/authLayout";
+interface FormSubmit {
   email: string;
   password: string;
 }
 
 const Signin: NextPage<any> = () => {
-    const [userLoginForm,setUserLoginForm]=useState<FormSubmit>({
-        email:'',
-        password:''
-    })
-  const [isLoading, setisLoading] = useState<boolean>(false)
-  const router = useRouter()
+  const [userLoginForm, setUserLoginForm] = useState<FormSubmit>({
+    email: "",
+    password: "",
+  });
+  const [isLoading, setisLoading] = useState<boolean>(false);
+  const router = useRouter();
   const REDIRECT_ON_LOGGED_IN = "/profile";
 
-
-  const handleInputChange=(event: React.ChangeEvent<HTMLInputElement>)=>{
-      setUserLoginForm((prev)=>({
-          ...prev,
-          [event.target.name]:event.target.value
-      }))
-  }
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setUserLoginForm((prev) => ({
+      ...prev,
+      [event.target.name]: event.target.value,
+    }));
+    console.log(userLoginForm);
+  };
 
   useEffect(() => {
     // if user already logged in, redirect
     if (auth.getCurrentUser()) {
-      router.push(REDIRECT_ON_LOGGED_IN);
+      //router.push(REDIRECT_ON_LOGGED_IN);
     } // eslint-disable-next-line
   }, []);
 
-
-  
-  const onSubmit = (e:React.MouseEvent<HTMLButtonElement>) => {
-    setisLoading(true)
-    auth.login(userLoginForm)
+  const onSubmit = (userLoginForm: FormSubmit) => {
+    auth
+      .login(userLoginForm)
       .then((localStorageObj) => {
-          alert('you in')
-        router.replace(REDIRECT_ON_LOGGED_IN)
-        })
-      .catch((err: Error) => {
-        setisLoading(false)
-        return console.error(err)
+        alert("you in");
+        router.replace(REDIRECT_ON_LOGGED_IN);
       })
-  }
-
+      .catch((err: Error) => {
+        setisLoading(false);
+        return console.error(err);
+      });
+  };
 
   return (
-    <div className={`${styles.Login}`}>
-      <h1 className={`${styles.heading}`}>Sign In</h1>
-      <div  className={`${styles.Form}`}>
-        <input onChange={handleInputChange} className='form-control input' value={userLoginForm.email} name='email' type={'email'} placeholder='Email' />
-        <input onChange={handleInputChange} className='form-control input' value={userLoginForm.password} type={'password'} name='password' placeholder='Password' />
-        <button  onClick={onSubmit} disabled={isLoading} >Submit</button>
-      </div>
-        
-    </div>
-  )
-}
+    <AuthLayout
+      inputs={[
+        {
+          type: "email",
+          placeholder: "Email",
+          id: "email",
+        },
+        {
+          type: "password",
+          placeholder: "Password",
+          id: "password",
+        },
+      ]}
+      submitBtnText={"Log In"}
+      onSubmit={(user: FormSubmit) => onSubmit(user)}
+      redirect={{url:'/register',text:'Register'}}
+    />
+  );
+};
 
 export default Signin;
-
-
-
