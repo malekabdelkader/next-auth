@@ -72,7 +72,7 @@ class AuthService {
       id,
     };
     localStorage.setItem("currentUser", JSON.stringify(toSave));
-    return toSave;
+    return  { token, id, firstName, email };
   }
 
   logout() {

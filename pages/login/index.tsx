@@ -4,6 +4,9 @@ import auth from "../../services/Authentification/Authentication";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import AuthLayout from "../../layouts/authLayout";
+import  { storeDetails, UserAction } from '../../store/index'
+import { useDispatch,useSelector } from "react-redux";
+
 interface FormSubmit {
   email: string;
   password: string;
@@ -11,10 +14,13 @@ interface FormSubmit {
 
 const Signin: NextPage<any> = () => {
   const router = useRouter();
+  const dispatch = useDispatch()
+  const {isAuthetificated}=useSelector((state:storeDetails)=>state)
+
   const REDIRECT_ON_LOGGED_IN = "/";
   useEffect(() => {
     // if user already logged in, redirect
-    if (auth.getCurrentUser()) {
+    if (isAuthetificated) {
        router.push(REDIRECT_ON_LOGGED_IN);
     } // eslint-disable-next-line
   }, []);
@@ -23,6 +29,7 @@ const Signin: NextPage<any> = () => {
     auth
       .login(userLoginForm)
       .then((localStorageObj) => {
+        dispatch(UserAction.signin(localStorageObj))
         router.replace(REDIRECT_ON_LOGGED_IN);
       })
       .catch((err: Error) => {

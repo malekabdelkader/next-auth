@@ -5,20 +5,27 @@ import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 import auth from '../services/Authentification/Authentication'
 import styles from '../styles/Home.module.css'
+import  { storeDetails, UserAction } from '../store/index'
+import { useDispatch } from "react-redux";
+import {useSelector} from 'react-redux'
 
 const Home: NextPage = () => {
   const REDIRECT_TO_LOGIN='/login'
   const router = useRouter();
+  const dispatch = useDispatch()
+  const {isAuthetificated,user}=useSelector((state:storeDetails)=>state)
 
   useEffect(() => {
     // if user not logged in, redirect
-    if (!auth.getCurrentUser()) {
-       router.push(REDIRECT_TO_LOGIN);
+    if (!isAuthetificated) {
+       router.replace(REDIRECT_TO_LOGIN);
     } // eslint-disable-next-line
   }, []);
   const handleLogout=()=>{
     auth.logout()
+    dispatch(UserAction.logout({}))
   }
+
   return (
     <div className={styles.container}>
       <Head>
@@ -29,7 +36,7 @@ const Home: NextPage = () => {
 
       <main className={styles.main}>
         <h1 className={styles.title}>
-          Welcome to the   <a href="https://nextjs.org">Next.js Auth App</a>
+          Welcome    <a href="https://nextjs.org">{user?.firstName}</a>
         </h1>
 
         <p className={styles.description}>

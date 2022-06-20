@@ -28,7 +28,7 @@ export default async function handler(
    const token=jwt.sign({ email,id:user.id,firstName:user.firstName }, 'shhhhh');
    UserSessions.push({token,LoginTime:new Date().toJSON()})
    fs.writeFileSync(UserSessionsFileName, JSON.stringify(UserSessions));
-   res.status(200).json({ messsage:'Success !',token} )
+   res.status(200).json({...user, token} )
 
   }
   switch(method){
