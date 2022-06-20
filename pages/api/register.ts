@@ -1,10 +1,13 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next'
 import User from '../../models/User'
-import { users } from './login';
-
+//import { users } from './login';
+import usersFile  from '../../users.json'
+import fs from 'fs';
 import bcrypt from 'bcrypt'
-const jwt = require('jsonwebtoken');
+import jwt  from 'jsonwebtoken';
+const usersFileName = './users.json';
+
 type Data = {
   name: any
 }
@@ -15,6 +18,7 @@ export default async function handler(
 ) {
   const {method}=req
   const handleCreateUser=async(user:User)=>{
+    let users:User[]=usersFile
     const exitUser=users.find(u=>u.email===user.email)
     if(exitUser){
       res.status(409).json({ messsage:'Email already exist'})
@@ -23,8 +27,8 @@ export default async function handler(
     const password=await hashIt(user.password)
     users.push({...user,password,id:(Math.random()*1000).toString()})
     console.log({email:user.email,password:user.password});
+    fs.writeFileSync(usersFileName, JSON.stringify(users));
     res.status(200).json({ messsage:'success!'} )
-
 }
 
   switch(method){

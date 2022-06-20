@@ -1,4 +1,4 @@
-import React, { FormEvent, useEffect, useState } from "react";
+import React, { FormEvent, FormEventHandler, FormHTMLAttributes, useEffect, useState } from "react";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import Link from "next/link";
@@ -34,7 +34,7 @@ const AuthLayout: React.FC<FormProps> = ({
    * Handle submit of form. Send to actionURL and pass response/ error to handleActionUrlResponse
    * @param evt
    */
-  const handleSubmit = (evt:React.MouseEvent<HTMLButtonElement>) => {
+  const handleSubmit = (evt:FormEvent<HTMLFormElement> ) => {
     evt.preventDefault();
     setisLoading(true);
     onSubmit(formState);
@@ -68,7 +68,7 @@ const AuthLayout: React.FC<FormProps> = ({
                 </div>
                 <div className="col-md-6 col-lg-7 d-flex align-items-center">
                   <div className="card-body p-4 p-lg-5 text-black">
-                    <form>
+                    <form onSubmit={handleSubmit}>
                       <div className="d-flex align-items-center mb-3 pb-1">
                         <i
                           className="fas fa-cubes fa-2x me-3"
@@ -100,10 +100,10 @@ const AuthLayout: React.FC<FormProps> = ({
 
                       <div className="pt-1 mb-4">
                         <button
-                          onClick={handleSubmit}
                           disabled={isLoading}
                           className="btn btn-dark btn-lg btn-block"
-                          type="button"
+                          type="submit"
+                          
                         >
                           {submitBtnText}
                         </button>

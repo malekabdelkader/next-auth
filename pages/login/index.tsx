@@ -10,26 +10,12 @@ interface FormSubmit {
 }
 
 const Signin: NextPage<any> = () => {
-  const [userLoginForm, setUserLoginForm] = useState<FormSubmit>({
-    email: "",
-    password: "",
-  });
-  const [isLoading, setisLoading] = useState<boolean>(false);
   const router = useRouter();
-  const REDIRECT_ON_LOGGED_IN = "/profile";
-
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setUserLoginForm((prev) => ({
-      ...prev,
-      [event.target.name]: event.target.value,
-    }));
-    console.log(userLoginForm);
-  };
-
+  const REDIRECT_ON_LOGGED_IN = "/";
   useEffect(() => {
     // if user already logged in, redirect
     if (auth.getCurrentUser()) {
-      //router.push(REDIRECT_ON_LOGGED_IN);
+       router.push(REDIRECT_ON_LOGGED_IN);
     } // eslint-disable-next-line
   }, []);
 
@@ -37,11 +23,10 @@ const Signin: NextPage<any> = () => {
     auth
       .login(userLoginForm)
       .then((localStorageObj) => {
-        alert("you in");
         router.replace(REDIRECT_ON_LOGGED_IN);
       })
       .catch((err: Error) => {
-        setisLoading(false);
+        alert('Wrong Email or Password!')
         return console.error(err);
       });
   };

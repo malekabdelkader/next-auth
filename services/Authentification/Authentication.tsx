@@ -23,7 +23,7 @@ interface userToBackend {
 class AuthService {
   private bc = BackendComm;
   private EXPIRES_IN_DAYS = 3;
-  private REDIRECT_ON_LOGOUT = "/signin";
+  private REDIRECT_ON_LOGOUT = "/login";
 
   /**
    * @returns userobject saved in localStorage, if less than expired

@@ -12,13 +12,13 @@ interface FormSubmit  {
 const Register: NextPage<any> = () => {
   const router = useRouter()
   const REDIRECT_ON_REGISTER = "/login";
-  const REDIRECT_ON_LOGGED_IN='/profile'
+  const REDIRECT_ON_LOGGED_IN='/'
 
 
   useEffect(() => {
     // if user already logged in, redirect
     if (auth.getCurrentUser()) {
-    //  router.push(REDIRECT_ON_LOGGED_IN);
+        router.push(REDIRECT_ON_LOGGED_IN);
     } // eslint-disable-next-line
   }, []);
 
@@ -30,6 +30,8 @@ const Register: NextPage<any> = () => {
         router.replace(REDIRECT_ON_REGISTER)
         })
       .catch((err: Error) => {
+        //in case just of email exists ( can be server down or smth else)
+        alert('Error: Possible Email exist')
         return console.error(err)
       })
   }

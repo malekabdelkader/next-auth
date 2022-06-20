@@ -2,8 +2,12 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import User from '../../models/User'
 import { compareIt } from './register';
-const jwt = require('jsonwebtoken');
-
+import jwt  from 'jsonwebtoken';
+import fs from 'fs';
+import usersFile from '../../users.json'
+import UserSessionsFile from '../../sessions.json'
+import Session from '../../models/Session';
+const UserSessionsFileName='./sessions.json'
 type Data = {
   name: any
 }
@@ -14,18 +18,16 @@ export default async function handler(
 ) {
   const {method}=req
   const handleAuthetificateUser=async(email:string,password:string)=>{
+   let users:User[]=usersFile
+   let UserSessions:Session[]=UserSessionsFile
    const user= users.find(u=>u.email==email)
-   console.log({email,password});
-   console.log(users.length)
-   console.log(users.map(e=>(e.email+","+e.password)));
-   console.log(user);
-   
-
    if( !user || !(await compareIt(password,user.password))){
      res.status(403).json({ messsage:'Wrong Email or Password '} )
      return;
    }
    const token=jwt.sign({ email,id:user.id,firstName:user.firstName }, 'shhhhh');
+   UserSessions.push({token,LoginTime:new Date().toJSON()})
+   fs.writeFileSync(UserSessionsFileName, JSON.stringify(UserSessions));
    res.status(200).json({ messsage:'Success !',token} )
 
   }
@@ -41,4 +43,3 @@ export default async function handler(
   
 }
 
-export var users:User[]=[]
