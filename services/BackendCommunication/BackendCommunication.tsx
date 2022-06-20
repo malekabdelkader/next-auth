@@ -1,6 +1,8 @@
 /**
  * Handles all backend communication
  * Includes e.g. error handling
+ * this is my ready to use service configuration
+ * easy to use in small and big projects
  */
  import axios, { AxiosError, AxiosRequestConfig } from 'axios';
  import Authentication from '../Authentification/Authentication';
